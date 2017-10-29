@@ -1,5 +1,23 @@
 # chat-assessment
+
 a chat room assessment
+
+## Install
+
+```
+git clone https://github.com/gwokae/chat-assessment.git
+cd chat-server-assessment
+npm i
+```
+
+## Start chat server
+
+```
+npm start
+```
+
+* By default, it will listen on http://localhost:6612
+* No session. Each browser consider as a client
 
 ## Tasks
 
