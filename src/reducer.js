@@ -1,8 +1,12 @@
 import { ACTIONS } from './constants';
 
-export default (state = { server: '', connect: false, openLoginModal: false }, action) => {
+const defaultState = {
+  server: '', connect: false, openLoginModal: false, messages: [],
+};
+
+export default (state = defaultState, action) => {
   const {
-    type, nickname, server, isConnected, error, message
+    type, nickname, server, isConnected, error, message, data,
   } = action;
 
   switch (type) {
@@ -41,6 +45,17 @@ export default (state = { server: '', connect: false, openLoginModal: false }, a
       return {
         ...state,
         messageSubmit: true,
+      };
+    case ACTIONS.RECEIVE_MESSAGE:
+      return {
+        ...state,
+        messages: [
+          ...state.messages,
+          {
+            ...data,
+            type: data.nickname === state.nickname ? 'me' : data.type,
+          },
+        ].sort((a, b) => (b.timestamp - a.timestamp)),
       };
     default:
       return state;

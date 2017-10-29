@@ -45,11 +45,17 @@ class Communication extends React.Component {
         this.socket.send(JSON.stringify({ type: 'logout' }));
       }
     }
+
+    if (!this.props.messageSubmit && nextProps.messageSubmit && nextProps.message
+      && nextProps.connect) {
+      // send msg
+      this.socket.send(JSON.stringify({ type: 'message', text: nextProps.message }));
+    }
   }
 
   handleMessage(event, data) {
-    const { type } = data;
-    const { connectionStatusChange, updateErrorMessage} = this.props.actions;
+    const { type, accepted } = data;
+    const { connectionStatusChange, updateErrorMessage, editMessage, receiveMessage} = this.props.actions;
 
     switch (type) {
       case 'login':
@@ -66,6 +72,13 @@ class Communication extends React.Component {
           this.socket = null;
         }
         break;
+      case 'message':
+        if (accepted) {
+          editMessage('');
+        } else if (data.data) {
+          receiveMessage(data.data);
+        }
+        break;
       default:
         console.warn(`Received unsupported message type ${type}`);
     }
@@ -78,12 +91,16 @@ Communication.propTypes = {
   connect: PropTypes.bool,
   server: PropTypes.string,
   nickname: PropTypes.string,
+  message: PropTypes.string,
+  messageSubmit: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
   connect: state.connect,
   server: state.server,
   nickname: state.nickname,
+  message: state.message,
+  messageSubmit: state.messageSubmit,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -93,6 +110,14 @@ const mapDispatchToProps = dispatch => ({
       isConnected,
     }),
     updateErrorMessage: error => ({ type: ACTIONS.ON_ERROR, error }),
+    editMessage: message => ({
+      type: ACTIONS.EDIT_MESSAGE,
+      message,
+    }),
+    receiveMessage: data => ({
+      type: ACTIONS.RECEIVE_MESSAGE,
+      data,
+    }),
   }, dispatch),
 });
 

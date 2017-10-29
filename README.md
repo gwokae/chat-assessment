@@ -6,10 +6,10 @@ a chat room assessment
 * [X] basic UI / React / Webpack / ...everything
 * [X] landing page design (Welcome / Server status)
 * [X] login server & user dialog
-* [ ] chat room design
-* [ ] display system message
-* [ ] send message
-* [ ] logout (disconnect to server)
+* [X] chat room design
+* [X] display system message
+* [X] send message
+* [X] logout (disconnect to server)
 
 ## Author
 
