@@ -7,7 +7,9 @@ import reducer from './reducer';
 import Communication from './components/Communication';
 import TopNavibar from './components/TopNavibar';
 import Welcome from './components/Welcome';
-import Chatroom from './components/Chatroom';
+import LoginModal from './components/LoginModal';
+// import LoginModal from './components/LoginModal';
+// import Chatroom from './components/Chatroom';
 
 const store = createStore(reducer);
 const Layout = () => (
@@ -15,6 +17,7 @@ const Layout = () => (
     <Communication>
       <TopNavibar />
       <Welcome />
+      <LoginModal />
     </Communication>
   </div>
 );
@@ -25,3 +28,5 @@ ReactDOM.render(
     </Provider>
   ), document.getElementById('app'),
 );
+
+// setInterval(() => console.log(store.dispatch({type: 'TOGGLE_LOGIN_MODAL'})), 3000);
