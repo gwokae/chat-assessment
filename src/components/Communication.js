@@ -11,23 +11,51 @@ class Communication extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!this.props.connect && nextProps.server && nextProps.server !== this.props.server) {
+    if (!this.props.connect && nextProps.server) {
+      const { updateErrorMessage } = this.props.actions;
       // connect
-      const socket = new WebSocket(nextProps.server);
-      socket.addEventListener('open', () => {
-        socket.send(JSON.stringify({ type: 'login', nickname: nextProps.nickname }));
-        this.props.actions.connectionStatusChange(true);
-      });
-      socket.addEventListener('close', () => this.props.actions.connectionStatusChange(false));
-      socket.addEventListener('message', (event) => {
-          console.log('Message from server ', event, event.data);
-      });
+      try {
+        const socket = new WebSocket(nextProps.server);
+        socket.addEventListener('open', () => {
+          socket.send(JSON.stringify({ type: 'login', nickname: nextProps.nickname }));
+        });
+        socket.addEventListener('close', () => this.props.actions.connectionStatusChange(false));
+        socket.addEventListener('error', (event) => {
+          updateErrorMessage({ server: `Unable to connect url: ${event.target.url}.` });
+        });
+        socket.addEventListener('message', (event) => {
+          const data = JSON.parse(event.data);
+          this.handleMessage(event, data);
+        });
+        this.socket = socket;
+      } catch (e) {
+        updateErrorMessage({ server: e.message || JSON.stringfy(e) });
+      }
+    }
+  }
+
+  handleMessage(event, data) {
+    const { type } = data;
+    const { connectionStatusChange, updateErrorMessage} = this.props.actions;
+
+    switch (type) {
+      case 'login':
+        if (data.error) {
+          updateErrorMessage({ nickname: data.error });
+        } else {
+          connectionStatusChange(true);
+        }
+        break;
+      default:
+        console.warn(`Received unsupported message type ${type}`);
     }
   }
 }
 
 Communication.propTypes = {
   children: PropTypes.any.isRequired,
+  actions: PropTypes.object.isRequired,
+  connect: PropTypes.bool,
   server: PropTypes.string,
   nickname: PropTypes.string,
 };
@@ -40,7 +68,11 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators({
-    connectionStatusChange: isConnected => ({ type: ACTIONS.CONNECTION_STATUS_CHANGE, isConnected }),
+    connectionStatusChange: isConnected => ({
+      type: ACTIONS.CONNECTION_STATUS_CHANGE,
+      isConnected,
+    }),
+    updateErrorMessage: error => ({ type: ACTIONS.ON_ERROR, error }),
   }, dispatch),
 });
 

@@ -11,9 +11,12 @@ const defaultState = {
 };
 
 const FieldGroup = (props) => {
-  const { id, label, help, ...rest } = props;
+  const {
+    id, label, help, validationState, ...rest
+  } = props;
+
   return (
-    <FormGroup controlId={id}>
+    <FormGroup controlId={id} validationState={validationState}>
       <ControlLabel>{label}</ControlLabel>
       <FormControl {...rest} />
       {help && <HelpBlock>{help}</HelpBlock>}
@@ -26,6 +29,7 @@ FieldGroup.propTypes = {
   value: PropTypes.string,
   label: PropTypes.string,
   help: PropTypes.string,
+  validationState: PropTypes.string,
 };
 
 class LoginModal extends React.Component {
@@ -42,6 +46,7 @@ class LoginModal extends React.Component {
   }
   render() {
     const { server, nickname } = this.state;
+    const { error = {} } = this.props;
     return (
       <Modal show={this.props.showModal} onHide={ this.close }>
         <Modal.Header closeButton>
@@ -55,6 +60,8 @@ class LoginModal extends React.Component {
               name='server'
               value={server}
               onChange={this.handleChange}
+              validationState={ error.server ?  'error' : null }
+              help={ error.server || '' }
               placeholder='ws://127.0.0.1:6613'
             />
             <FieldGroup
@@ -63,6 +70,8 @@ class LoginModal extends React.Component {
               name='nickname'
               value={nickname}
               onChange={this.handleChange}
+              validationState={ error.nickname ?  'error' : null }
+              help={ error.nickname || '' }
               placeholder='John Doe'
             />
           </form>
@@ -92,23 +101,31 @@ class LoginModal extends React.Component {
   }
 
   handleChange({ target: { value, name } }) {
+    const { error = {}, actions: { updateErrorMessage } } = this.props;
     let obj = {};
     obj[name] = value;
+    if (error[name]) { // clean up error
+      let errorMessage = {};
+      errorMessage[name] = '';
+      updateErrorMessage(errorMessage);
+    }
     this.setState(obj);
   }
 }
 
 LoginModal.propTypes = {
   actions: PropTypes.object.isRequired,
+  error: PropTypes.object,
   showModal: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = state => ({ showModal: state.openLoginModal });
+const mapStateToProps = state => ({ showModal: state.openLoginModal, error: state.error });
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators({
     toggleLogin: () => ({ type: ACTIONS.TOGGLE_LOGIN_MODAL }),
     loginSubmit: ({ nickname, server }) => ({ type: ACTIONS.LOGIN_SUBMIT, nickname, server }),
+    updateErrorMessage: error => ({ type: ACTIONS.ON_ERROR, error }),
   }, dispatch),
 });
 export default connect(
