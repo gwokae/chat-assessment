@@ -18,6 +18,7 @@ export default (state = defaultState, action) => {
     case ACTIONS.CONNECTION_STATUS_CHANGE:
       return {
         ...state,
+        messages: isConnected ? [{ type: 'system', text: 'You had join the chat', timestamp: Date.now() }] : state.messages,
         openLoginModal: isConnected ? false : state.openLoginModal,
         connect: isConnected,
       };
