@@ -55,7 +55,9 @@ class Communication extends React.Component {
 
   handleMessage(event, data) {
     const { type, accepted } = data;
-    const { connectionStatusChange, updateErrorMessage, editMessage, receiveMessage} = this.props.actions;
+    const {
+      connectionStatusChange, updateErrorMessage, editMessage, receiveMessage,
+    } = this.props.actions;
 
     switch (type) {
       case 'login':
@@ -70,6 +72,9 @@ class Communication extends React.Component {
         if (this.socket) {
           this.socket.close();
           this.socket = null;
+        }
+        if (data.reason) {
+          updateErrorMessage({ logout: data.reason });
         }
         break;
       case 'message':
