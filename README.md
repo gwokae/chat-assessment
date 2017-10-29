@@ -6,11 +6,11 @@ a chat room assessment
 
 ```
 git clone https://github.com/gwokae/chat-assessment.git
-cd chat-server-assessment
+cd chat-assessment
 npm i
 ```
 
-## Start chat server
+## Start chat client
 
 ```
 npm start
