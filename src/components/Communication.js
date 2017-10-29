@@ -63,6 +63,10 @@ class Communication extends React.Component {
       case 'login':
         if (data.error) {
           updateErrorMessage({ nickname: data.error });
+          if (this.socket) {
+            this.socket.close();
+            this.socket = null;
+          }
         } else {
           connectionStatusChange(true);
         }
