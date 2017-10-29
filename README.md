@@ -3,7 +3,7 @@ a chat room assessment
 
 ## Tasks
 
-* [ ] basic UI / React / Webpack / ...everything
+* [X] basic UI / React / Webpack / ...everything
 * [ ] landing page design (Welcome / Server status)
 * [ ] login dialog
 * [ ] chat room design
