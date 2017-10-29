@@ -1,5 +1,6 @@
 import React from 'react';
 import { Nav, Navbar, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
+import ConnectStatus from './ConnectStatus'
 
 export default () => (
   <Navbar inverse fixedTop>
@@ -18,7 +19,7 @@ export default () => (
       </NavDropdown>
     </Nav>
     <Nav pullRight>
-      <NavItem>Connect to server</NavItem>
+      <ConnectStatus />
     </Nav>
   </Navbar>
 );

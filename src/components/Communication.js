@@ -11,15 +11,21 @@ class Communication extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!this.props.connect && nextProps.server) {
+    if (!this.props.connect && nextProps.server && !this.socket) {
+      // login
       const { updateErrorMessage } = this.props.actions;
-      // connect
       try {
         const socket = new WebSocket(nextProps.server);
         socket.addEventListener('open', () => {
           socket.send(JSON.stringify({ type: 'login', nickname: nextProps.nickname }));
         });
-        socket.addEventListener('close', () => this.props.actions.connectionStatusChange(false));
+        socket.addEventListener('close', () => {
+          this.props.actions.connectionStatusChange(false);
+          if (this.socket) {
+            this.socket.close();
+            this.socket = null;
+          }
+        });
         socket.addEventListener('error', (event) => {
           updateErrorMessage({ server: `Unable to connect url: ${event.target.url}.` });
         });
@@ -30,6 +36,13 @@ class Communication extends React.Component {
         this.socket = socket;
       } catch (e) {
         updateErrorMessage({ server: e.message || JSON.stringfy(e) });
+      }
+    }
+
+    if (this.props.connect && !nextProps.connect) {
+      // logout
+      if (this.socket) {
+        this.socket.send(JSON.stringify({ type: 'logout' }));
       }
     }
   }
@@ -44,6 +57,13 @@ class Communication extends React.Component {
           updateErrorMessage({ nickname: data.error });
         } else {
           connectionStatusChange(true);
+        }
+        break;
+      case 'logout':
+        this.props.actions.connectionStatusChange(false);
+        if (this.socket) {
+          this.socket.close();
+          this.socket = null;
         }
         break;
       default:
