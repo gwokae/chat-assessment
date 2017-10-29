@@ -27,7 +27,7 @@ class ErrorModal extends React.Component {
       return result;
     }, []);
     return (
-      <Modal show={errors.length > 0} onHide={ this.close }>
+      <Modal show={errors.length > 0} onHide={ this.close } backdrop={true}>
         <Modal.Header closeButton>
           <Modal.Title>{`Error: ${errors.map(item => item.name).join(', ')}`}</Modal.Title>
         </Modal.Header>
