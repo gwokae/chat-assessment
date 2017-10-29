@@ -8,8 +8,8 @@ import Communication from './components/Communication';
 import TopNavibar from './components/TopNavibar';
 import Welcome from './components/Welcome';
 import LoginModal from './components/LoginModal';
+import Chatroom from './components/Chatroom';
 // import LoginModal from './components/LoginModal';
-// import Chatroom from './components/Chatroom';
 
 const store = createStore(reducer);
 const Layout = () => (
@@ -17,6 +17,7 @@ const Layout = () => (
     <Communication>
       <TopNavibar />
       <Welcome />
+      <Chatroom />
       <LoginModal />
     </Communication>
   </div>

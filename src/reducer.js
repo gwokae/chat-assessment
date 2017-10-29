@@ -2,7 +2,7 @@ import { ACTIONS } from './constants';
 
 export default (state = { server: '', connect: false, openLoginModal: false }, action) => {
   const {
-    type, nickname, server, isConnected, error,
+    type, nickname, server, isConnected, error, message
   } = action;
 
   switch (type) {
@@ -30,6 +30,17 @@ export default (state = { server: '', connect: false, openLoginModal: false }, a
         ...state,
         nickname,
         server,
+      };
+    case ACTIONS.EDIT_MESSAGE:
+      return {
+        ...state,
+        message,
+        messageSubmit: false,
+      };
+    case ACTIONS.MESSAGE_SUBMIT:
+      return {
+        ...state,
+        messageSubmit: true,
       };
     default:
       return state;

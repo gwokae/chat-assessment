@@ -1,3 +1,73 @@
-.jumbotron {
+.jumbotron, .chatroom {
   margin-top: 48px;
+}
+
+.chatroom {
+  ul {
+    display: flex;
+    flex-direction: column-reverse;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    height: calc(100vh - 96px);
+    overflow: auto;
+    margin-bottom: 0.5em;
+    li {
+      position: relative;
+      margin-top: 2em;
+      > p {
+        width: calc(100% - 2em - 78px);
+        padding: 1em;
+        border-radius: 1em;
+        background-color: #5bc0de;
+        margin-left: 78px;
+        margin-top: 1.5em;
+      }
+      > img {
+        float: left;
+        background-color: grey;
+        width: 64px;
+        height: 64px;
+      }
+
+      > span {
+        position: absolute;
+        display: block;
+        line-height: 1.5em;
+        top: 0;
+        left: 78px;
+      }
+
+      &.system {
+        > p {
+          margin-left: 0px;
+          background-color: #f0ad4e;
+          width: calc(100% - 2em);
+          text-align: center;
+        }
+        > img, > span {
+          display: none;
+        }
+      }
+
+      &.me {
+        > p {
+          margin-left: 0;
+          margin-right: 78px;
+          background-color: #5bc0de;
+          text-align: right;
+        }
+        > img {
+          float: right;
+          margin-right: 26px;
+        }
+        > span {
+          left: auto;
+          right: 110px;
+        }
+      }
+    }
+  }
+  .form-inline {
+  }
 }

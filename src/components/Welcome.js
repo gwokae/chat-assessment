@@ -7,6 +7,7 @@ import { ACTIONS } from '../constants';
 
 class Welcome extends React.Component {
   render() {
+    if (this.props.connect) return null;
     const { actions } = this.props;
     return (
       <Jumbotron>
@@ -30,9 +31,10 @@ class Welcome extends React.Component {
 
 Welcome.propTypes = {
   actions: PropTypes.object.isRequired,
+  connect: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({ connect: state.connect });
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators({
